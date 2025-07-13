@@ -1,0 +1,33 @@
+{ "app": {
+   
+   "title": "Data Storage App",
+   "version": "1.0.0",
+   "supplier": "Open STEMware",
+   "copyright": "bitValence",
+   "url": "https://github.com/cfs-apps/proxy_ds",
+
+   "description": [
+      "This is Basecamp proxy for NASA's Data Storage App. This repo augments",
+      "the DS App repo so DS can be integrated with Basecamp. The 'cfs' and",
+      "'requires' JSON objects are populated in ds.json"
+   ],
+
+   "proxy": {
+      "url": "https://github.com/nasa/ds",
+      "branch-tag": "equuleus-rc1",
+      "update-files": [
+         "ds.json         >> sample_app.json",
+         "CMakeLists.txt  >> CMakeLists.txt",
+         "eds/ds.xml      >> eds/ds.xml",
+         "fsw/platform_inc/ds_msgids.h >> fsw/platform_inc/ds_msgids.h" 
+      ]
+   },
+      
+   "cfs": {
+      "cfe-type": "CFE_PROXY"
+   },
+   
+   "requires": []
+   
+}}
+
