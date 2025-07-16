@@ -16,10 +16,12 @@
       "url": "https://github.com/nasa/ds",
       "branch-tag": "equuleus-rc1",
       "update-files": [
-         "ds.json         >> ds.json",
-         "CMakeLists.txt  >> CMakeLists.txt",
-         "eds/ds.xml      >> eds/ds.xml",
-         "fsw/platform_inc/ds_msgids.h >> fsw/platform_inc/ds_msgids.h" 
+         "ds.json                   >> ds.json",
+         "CMakeLists.txt            >> CMakeLists.txt",
+         "eds/ds.xml                >> eds/ds.xml",,
+         "eds/ds_config.xml         >> eds/ds_config.xml",,
+         "fsw/inc/ds_msgids.h       >> fsw/inc/ds_msgids.h",
+         "fsw/inc/ds_platform_cfg.h >> fsw/inc/ds_platform_cfg.h" 
       ]
    },
       

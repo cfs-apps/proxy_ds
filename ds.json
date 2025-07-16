@@ -14,7 +14,7 @@
    "cfs": {
       "cfe-type": "CFE_APP",
       "obj-file": "ds",
-      "entry-symbol": "DS_Main",
+      "entry-symbol": "DS_AppMain",
       "name": "DS",
       "priority": 40,
       "stack": 16384,

@@ -1,8 +1,7 @@
 project(CFE_DS C)
 # This file is from https://github.com/cfs-apps/proxy_ds
 
-include_directories(fsw/mission_inc)
-include_directories(fsw/platform_inc)
+include_directories(fsw/inc)
 include_directories(fsw/src)
 
 aux_source_directory(fsw/src APP_SRC_FILES)

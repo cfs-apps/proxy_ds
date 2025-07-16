@@ -24,6 +24,8 @@
 #ifndef DS_MSGIDS_H
 #define DS_MSGIDS_H
 
+#include "cfe_msgids.h"
+
 /**
  * \defgroup cfsdscmdmid CFS Data Storage Message IDs
  * \{
@@ -32,7 +34,7 @@
 //#define DS_CMD_MID     0x18BB /**< \brief DS Ground Commands Message ID */
 //#define DS_SEND_HK_MID 0x18BC /**< \brief DS Send Hk Data Cmd Message ID*/
 #define DS_CMD_MID      CFE_PLATFORM_CMD_TOPICID_TO_MID(CFE_MISSION_DS_CMD_TOPICID)
-#define DS_SEND_HK_MID  CFE_PLATFORM_CMD_TOPICID_TO_MID(CFE_MISSION_BC_SCH_2_SEC_TOPICID)
+#define DS_SEND_HK_MID  CFE_PLATFORM_CMD_TOPICID_TO_MID(CFE_MISSION_BC_SCH_4_SEC_TOPICID)
 
 /**\}*/
 
