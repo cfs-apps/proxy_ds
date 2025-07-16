@@ -19,7 +19,7 @@
          "ds.json                   >> ds.json",
          "CMakeLists.txt            >> CMakeLists.txt",
          "eds/ds.xml                >> eds/ds.xml",
-         "eds/ds_config.xml         >> eds/ds_config.xml",,
+         "eds/ds_config.xml         >> eds/ds_config.xml",
          "fsw/inc/ds_msgids.h       >> fsw/inc/ds_msgids.h",
          "fsw/inc/ds_platform_cfg.h >> fsw/inc/ds_platform_cfg.h" 
       ]
