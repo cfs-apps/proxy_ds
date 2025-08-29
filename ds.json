@@ -21,7 +21,7 @@
       "load_addr": 0,
       "exception-action": 0,
       "app-framework": "cfs",
-      "tables": ["ds_file_tbl.tbl,ds_filter_tbl.tbl"]
+      "tables": []
    },
    
    "requires": []
