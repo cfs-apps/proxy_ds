@@ -24,17 +24,17 @@
 #ifndef DS_MSGIDS_H
 #define DS_MSGIDS_H
 
-#include "cfe_msgids.h"
+#include "cfe_msgids.h" //bc
 
 /**
  * \defgroup cfsdscmdmid CFS Data Storage Message IDs
  * \{
  */
 
-//#define DS_CMD_MID     0x18BB /**< \brief DS Ground Commands Message ID */
-//#define DS_SEND_HK_MID 0x18BC /**< \brief DS Send Hk Data Cmd Message ID*/
-#define DS_CMD_MID      CFE_PLATFORM_CMD_TOPICID_TO_MID(CFE_MISSION_DS_CMD_TOPICID)
-#define DS_SEND_HK_MID  CFE_PLATFORM_CMD_TOPICID_TO_MID(CFE_MISSION_BC_SCH_4_SEC_TOPICID)
+//bc #define DS_CMD_MID     0x18BB /**< \brief DS Ground Commands Message ID */
+//bc #define DS_SEND_HK_MID 0x18BC /**< \brief DS Send Hk Data Cmd Message ID*/
+#define DS_CMD_MID      CFE_PLATFORM_CMD_TOPICID_TO_MID(CFE_MISSION_DS_CMD_TOPICID)       //bc
+#define DS_SEND_HK_MID  CFE_PLATFORM_CMD_TOPICID_TO_MID(CFE_MISSION_BC_SCH_4_SEC_TOPICID) //bc
 
 /**\}*/
 
@@ -43,12 +43,12 @@
  * \{
  */
 
-//#define DS_HK_TLM_MID   0x08B8 /**< \brief DS Hk Telemetry Message ID ****/
-//#define DS_DIAG_TLM_MID 0x08B9 /**< \brief DS File Info Telemetry Message ID ****/
-//#define DS_COMP_TLM_MID 0x08BA /**< \brief DS Completed File Info Telemetry Message ID ****/
-#define DS_HK_TLM_MID    CFE_PLATFORM_TLM_TOPICID_TO_MID(CFE_MISSION_DS_HK_TLM_TOPICID)
-#define DS_DIAG_TLM_MID  CFE_PLATFORM_TLM_TOPICID_TO_MID(CFE_MISSION_DS_DIAG_TLM_TOPICID)
-#define DS_COMP_TLM_MID  CFE_PLATFORM_TLM_TOPICID_TO_MID(CFE_MISSION_DS_COMP_TLM_TOPICID)
+//bc #define DS_HK_TLM_MID   0x08B8 /**< \brief DS Hk Telemetry Message ID ****/
+//bc #define DS_DIAG_TLM_MID 0x08B9 /**< \brief DS File Info Telemetry Message ID ****/
+//bc #define DS_COMP_TLM_MID 0x08BA /**< \brief DS Completed File Info Telemetry Message ID ****/
+#define DS_HK_TLM_MID    CFE_PLATFORM_TLM_TOPICID_TO_MID(CFE_MISSION_DS_HK_TLM_TOPICID)   //bc
+#define DS_DIAG_TLM_MID  CFE_PLATFORM_TLM_TOPICID_TO_MID(CFE_MISSION_DS_DIAG_TLM_TOPICID) //bc
+#define DS_COMP_TLM_MID  CFE_PLATFORM_TLM_TOPICID_TO_MID(CFE_MISSION_DS_COMP_TLM_TOPICID) //bc
 
 
 /**\}*/

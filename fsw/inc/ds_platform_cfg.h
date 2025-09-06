@@ -73,7 +73,7 @@
  *       The number must be greater than zero but there is no upper
  *       enforced limit for this parameter.
  */
-//bc #define DS_DEST_FILE_CNT 16
+//bc::Moved to ds_config.xml: #define DS_DEST_FILE_CNT 16
 
 /**
  *  \brief Destination File Table -- pathname buffer size
@@ -124,7 +124,7 @@
  *       of four bytes for alignment.  The value cannot exceed the
  *       maximum filename size allowed by the OS (#OS_MAX_PATH_LEN).
  */
-//bc #define DS_EXTENSION_BUFSIZE 8
+//bc::Moved to ds_config.xml: #define DS_EXTENSION_BUFSIZE 8
 
 /**
  *  \brief Packet Filter Table -- logical table name
@@ -172,7 +172,7 @@
  *       defined for this project, will reduce the table file size,
  *       possibly significantly.
  */
-//bc #define DS_PACKETS_IN_FILTER_TABLE 256
+//bc::Moved to ds_config.xml: #define DS_PACKETS_IN_FILTER_TABLE 256
 
 /**
  *  \brief Packet Filter Table -- filters per packet
@@ -187,7 +187,7 @@
  *       The number of filters per packet must be greater than zero
  *       and not greater than #DS_DEST_FILE_CNT.
  */
-//bc #define DS_FILTERS_PER_PACKET 4
+//bc::Moved to ds_config.xml: #define DS_FILTERS_PER_PACKET 4
 
 /**
  *  \brief Common Table File -- descriptor text buffer size
@@ -201,7 +201,7 @@
  *       The buffer size must be greater than zero and a multiple
  *       of four bytes for alignment.  There is no upper limit.
  */
-//bc #define DS_DESCRIPTOR_BUFSIZE 32
+//bc::Moved to ds_config.xml: #define DS_DESCRIPTOR_BUFSIZE 32
 
 /**
  *  \brief Filename Sequence Count -- number of digits

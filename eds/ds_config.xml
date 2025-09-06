@@ -25,11 +25,11 @@
 <DesignParameters>
 
   <Package name="DS" shortDescription="Data Storage App Configuration">
-     <Define name="EXTENSION_BUFSIZE"       value="8" />
-     <Define name="DEST_FILE_CNT"           value="16" />
-     <Define name="DESCRIPTOR_BUFSIZE"      value="32" />
-     <Define name="FILTERS_PER_PACKET"      value="4" />
-     <Define name="PACKETS_IN_FILTER_TABLE" value="256" />
+     <Define name="EXTENSION_BUFSIZE"       value="8"   shortDescription="Moved from ds_platform_cfg.h" />
+     <Define name="DEST_FILE_CNT"           value="16"  shortDescription="Moved from ds_platform_cfg.h" />
+     <Define name="DESCRIPTOR_BUFSIZE"      value="32"  shortDescription="Moved from ds_platform_cfg.h" />
+     <Define name="FILTERS_PER_PACKET"      value="4"   shortDescription="Moved from ds_platform_cfg.h" />
+     <Define name="PACKETS_IN_FILTER_TABLE" value="256" shortDescription="Moved from ds_platform_cfg.h" />
   </Package>
 
 </DesignParameters>
