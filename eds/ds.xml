@@ -52,7 +52,7 @@
       </ContainerDataType>
 
       <IntegerDataType name="ExtensionPathBaseSize">
-        <IntegerDataEncoding sizeInBits="4" encoding="unsigned" />
+        <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
       </IntegerDataType>
 
       <ArrayDataType name="ExtensionSize" dataTypeRef="ExtensionPathBaseSize">

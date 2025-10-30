@@ -29,7 +29,7 @@
      <Define name="DEST_FILE_CNT"           value="16"  shortDescription="Moved from ds_platform_cfg.h" />
      <Define name="DESCRIPTOR_BUFSIZE"      value="32"  shortDescription="Moved from ds_platform_cfg.h" />
      <Define name="FILTERS_PER_PACKET"      value="4"   shortDescription="Moved from ds_platform_cfg.h" />
-     <Define name="PACKETS_IN_FILTER_TABLE" value="256" shortDescription="Moved from ds_platform_cfg.h" />
+     <Define name="PACKETS_IN_FILTER_TABLE" value="16"  shortDescription="Moved from ds_platform_cfg.h" />
   </Package>
 
 </DesignParameters>
