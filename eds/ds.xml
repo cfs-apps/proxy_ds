@@ -48,6 +48,30 @@
         </EntryList>
       </ContainerDataType>
 
+      <ContainerDataType name="FileInfo_Payload" shortDescription="">
+        <EntryList>
+          <Entry name="FileAge"     type="BASE_TYPES/uint32"   shortDescription="Current file age in seconds" />
+          <Entry name="FileSize"    type="BASE_TYPES/uint32"   shortDescription="Current file size in bytes" />
+          <Entry name="FileRate"    type="BASE_TYPES/uint32"   shortDescription="Current file data rate (avg since HK)" />
+          <Entry name="SeqCount"    type="BASE_TYPES/uint32"   shortDescription="Current file enable/disable state" />
+          <Entry name="EnableState" type="BASE_TYPES/uint16"   shortDescription="Current file open/close state" />
+          <Entry name="OpenState"   type="BASE_TYPES/uint16"   shortDescription="Sequence count portion of filename" />
+          <Entry name="Filename"    type="BASE_TYPES/PathName" shortDescription="filename (path+base+seq+ext), TODO: Use DS_TOTAL_FNAME_BUFSIZE " />
+        </EntryList>
+      </ContainerDataType>
+      
+      <ContainerDataType name="FileInfoPkt" baseType="CFE_HDR/TelemetryHeader">
+        <EntryList>
+          <Entry type="FileInfo_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="FileCompPkt" baseType="CFE_HDR/TelemetryHeader">
+        <EntryList>
+          <Entry type="FileInfo_Payload" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
       <ContainerDataType name="CMD" baseType="CFE_HDR/CommandHeader">
       </ContainerDataType>
 
@@ -976,14 +1000,14 @@
               <GenericTypeMap name="TelemetryDataType" type="HousekeepingPkt" />
             </GenericTypeMapSet>
           </Interface>
-          <Interface name="DIAG_TLM" shortDescription="DS File Info Telemetry Message ID" type="CFE_SB/Telemetry">
+          <Interface name="FILE_INFO_TLM" shortDescription="DS File Info Telemetry Message ID" type="CFE_SB/Telemetry">
             <GenericTypeMapSet>
-              <GenericTypeMap name="TelemetryDataType" type="CFE_HDR/TelemetryHeader" />
+              <GenericTypeMap name="TelemetryDataType" type="FileInfoPkt" />
             </GenericTypeMapSet>
           </Interface>
-          <Interface name="COMP_TLM" shortDescription="DS Completed File Info Telemetry Message ID" type="CFE_SB/Telemetry">
+          <Interface name="FILE_COMP_TLM" shortDescription="DS Completed File Info Telemetry Message ID" type="CFE_SB/Telemetry">
             <GenericTypeMapSet>
-              <GenericTypeMap name="TelemetryDataType" type="CFE_HDR/TelemetryHeader" />
+              <GenericTypeMap name="TelemetryDataType" type="FileCompPkt" />
             </GenericTypeMapSet>
           </Interface>
         </RequiredInterfaceSet>
@@ -992,16 +1016,16 @@
             <Variable type="BASE_TYPES/uint16" readOnly="true" name="CmdTopicId" initialValue="${CFE_MISSION/DS_CMD_TOPICID}" />
             <Variable type="BASE_TYPES/uint16" readOnly="true" name="SendHkTopicId" initialValue="${CFE_MISSION/DS_SEND_HK_TOPICID}" />
             <Variable type="BASE_TYPES/uint16" readOnly="true" name="HkTlmTopicId" initialValue="${CFE_MISSION/DS_HK_TLM_TOPICID}" />
-            <Variable type="BASE_TYPES/uint16" readOnly="true" name="DiagTlmTopicId" initialValue="${CFE_MISSION/DS_DIAG_TLM_TOPICID}" />
-            <Variable type="BASE_TYPES/uint16" readOnly="true" name="CompTlmTopicId" initialValue="${CFE_MISSION/DS_COMP_TLM_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="FileInfoTlmTopicId" initialValue="${CFE_MISSION/DS_FILE_INFO_TLM_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="FileCompTlmTopicId" initialValue="${CFE_MISSION/DS_FILE_COMP_TLM_TOPICID}" />
           </VariableSet>
           <!-- Assign fixed numbers to the "TopicId" parameter of each interface -->
           <ParameterMapSet>
             <ParameterMap interface="CMD" parameter="TopicId" variableRef="CmdTopicId" />
             <ParameterMap interface="SEND_HK" parameter="TopicId" variableRef="SendHkTopicId" />
             <ParameterMap interface="HK_TLM" parameter="TopicId" variableRef="HkTlmTopicId" />
-            <ParameterMap interface="DIAG_TLM" parameter="TopicId" variableRef="DiagTlmTopicId" />
-            <ParameterMap interface="COMP_TLM" parameter="TopicId" variableRef="CompTlmTopicId" />
+            <ParameterMap interface="FILE_INFO_TLM" parameter="TopicId" variableRef="FileInfoTlmTopicId" />
+            <ParameterMap interface="FILE_COMP_TLM" parameter="TopicId" variableRef="FileCompTlmTopicId" />
           </ParameterMapSet>
         </Implementation>
       </Component>
