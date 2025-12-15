@@ -1,2 +1,2 @@
 # proxy_ds
-Basecamp proxy for NASA's Data Storage (DS) App. This proxy allows DS https://github.com/nasa/ds to be installed into a Basecamp cFS target.
+Proxy for NASA's Data Storage (DS) App allowing DS https://github.com/nasa/ds to be installed into a Basecamp cFS target.
