@@ -18,8 +18,7 @@
       "release-tag": "v7.0.1",
       "update-files": [
          "ds.json           >> ds.json",
-         "eds/ds.xml        >> eds/ds.xml",
-         "eds/ds_config.xml >> eds/ds_config.xml"
+         "eds/ds.xml        >> eds/ds.xml"
       ]
    },
       
@@ -27,7 +26,17 @@
       "cfe-type": "CFE_PROXY"
    },
    
-   "requires": []
+   "requires": [],
+
+   "support-files":
+   { 
+      "cmd-sender":  "ds_event_exercise_cmds.txt",
+      "file-server": "",
+      "scripts":     "",
+      "templates":   "",
+      "tutorials":   ""
+   }
+
    
 }}
 
