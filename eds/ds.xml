@@ -34,67 +34,59 @@
     <DataTypeSet>
        <ContainerDataType name="HkTlm_Payload" shortDescription="HK housekeeping">
         <EntryList>
-          <Entry name="CmdCounter" type="BASE_TYPES/uint8" shortDescription="Count of valid commands received" />
-          <Entry name="ErrCounter" type="BASE_TYPES/uint8" shortDescription="Count of invalid commands received" />
-          <Entry name="CombinedPacketsSent" type="BASE_TYPES/uint8" shortDescription="Count of combined tlm pkts sent" />
-          <Entry name="MissingDataCtr" type="BASE_TYPES/uint8" shortDescription="Number of times missing data was detected" />
-          <Entry name="MemPoolHandle" type="BASE_TYPES/uint8" shortDescription="Memory pool handle used to get mempool diags" />
+          <Entry type="BASE_TYPES/uint8" name="CmdAcceptedCounter" shortDescription="Count of valid commands received" />
+          <Entry type="BASE_TYPES/uint8" name="CmdRejectedCounter" shortDescription="Count of invalid commands received" />
+          <Entry type="BASE_TYPES/uint8" name="DestTblLoadCounter" shortDescription="Count of destination file table loads" />
+          <Entry type="BASE_TYPES/uint8" name="DestTblErrCounter" shortDescription="Count of failed attempts to get table data pointer" />
+          <Entry type="BASE_TYPES/uint8" name="FilterTblLoadCounter" shortDescription="Count of packet filter table loads" />
+          <Entry type="BASE_TYPES/uint8" name="FilterTblErrCounter" shortDescription="Count of failed attempts to get table data pointer" />
+          <Entry type="BASE_TYPES/uint8" name="AppEnableState" shortDescription="Application enable/disable state" />
+          <PaddingEntry sizeInBits="8" />
+          <Entry type="BASE_TYPES/uint16" name="FileWriteCounter" shortDescription="Count of good destination file writes" />
+          <Entry type="BASE_TYPES/uint16" name="FileWriteErrCounter" shortDescription="Count of bad destination file writes" />
+          <Entry type="BASE_TYPES/uint16" name="FileUpdateCounter" shortDescription="Count of good updates to secondary header" />
+          <Entry type="BASE_TYPES/uint16" name="FileUpdateErrCounter" shortDescription="Count of bad updates to secondary header" />
+          <Entry type="BASE_TYPES/uint32" name="DisabledPktCounter" shortDescription="Count of packets discarded (DS was disabled)" />
+          <Entry type="BASE_TYPES/uint32" name="IgnoredPktCounter" shortDescription="Count of packets discarded" />
+          <Entry type="BASE_TYPES/uint32" name="FilteredPktCounter" shortDescription="Count of packets discarded (failed filter test)" />
+          <Entry type="BASE_TYPES/uint32" name="PassedPktCounter" shortDescription="Count of packets that passed filter test" />
+          <Entry type="BASE_TYPES/PathName" name="FilterTblFilename" shortDescription="Name of filter table file" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="HousekeepingPkt" baseType="CFE_HDR/TelemetryHeader">
+      <ContainerDataType name="HkPacket" baseType="CFE_HDR/TelemetryHeader">
         <EntryList>
           <Entry type="HkTlm_Payload" name="Payload" />
-        </EntryList>
-      </ContainerDataType>
-
-      <ContainerDataType name="FileInfo_Payload" shortDescription="">
-        <EntryList>
-          <Entry name="FileAge"     type="BASE_TYPES/uint32"   shortDescription="Current file age in seconds" />
-          <Entry name="FileSize"    type="BASE_TYPES/uint32"   shortDescription="Current file size in bytes" />
-          <Entry name="FileRate"    type="BASE_TYPES/uint32"   shortDescription="Current file data rate (avg since HK)" />
-          <Entry name="SeqCount"    type="BASE_TYPES/uint32"   shortDescription="Current file enable/disable state" />
-          <Entry name="EnableState" type="BASE_TYPES/uint16"   shortDescription="Current file open/close state" />
-          <Entry name="OpenState"   type="BASE_TYPES/uint16"   shortDescription="Sequence count portion of filename" />
-          <Entry name="Filename"    type="BASE_TYPES/PathName" shortDescription="filename (path+base+seq+ext), TODO: Use DS_TOTAL_FNAME_BUFSIZE " />
-        </EntryList>
-      </ContainerDataType>
-      
-      <ContainerDataType name="FileInfoPkt" baseType="CFE_HDR/TelemetryHeader">
-        <EntryList>
-          <Entry type="FileInfo_Payload" name="Payload" />
-        </EntryList>
-      </ContainerDataType>
-
-      <ContainerDataType name="FileCompPkt" baseType="CFE_HDR/TelemetryHeader">
-        <EntryList>
-          <Entry type="FileInfo_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 
       <ContainerDataType name="CMD" baseType="CFE_HDR/CommandHeader">
       </ContainerDataType>
 
-      <IntegerDataType name="ExtensionPathBaseSize">
-        <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
-      </IntegerDataType>
+      <StringDataType name="ExtensionString" length="${DS/EXTENSION_BUFSIZE}" />
+      <StringDataType name="BasenameString" length="${DS/BASENAME_BUFSIZE}" />
+      <StringDataType name="PathnameString" length="${DS/PATHNAME_BUFSIZE}" />
+      <StringDataType name="FullNameString" length="${DS/TOTAL_FNAME_BUFSIZE}" />
+      <StringDataType name="DescriptorString" length="${DS/DESCRIPTOR_BUFSIZE}" />
 
-      <ArrayDataType name="ExtensionSize" dataTypeRef="ExtensionPathBaseSize">
-        <DimensionList>
-          <Dimension size="${DS/EXTENSION_BUFSIZE}" />
-        </DimensionList>
-      </ArrayDataType>
-
+      <EnumeratedDataType name="EnableState" shortDescription="Filter type (packet count or time)">
+        <EnumerationList>
+          <Enumeration label="UNUSED" value="0" shortDescription="Unused entries in DS tables" />
+          <Enumeration label="DISABLED" value="0" shortDescription="Disabled State" />
+          <Enumeration label="ENABLED" value="1" shortDescription="Enabled State" />
+        </EnumerationList>
+        <IntegerDataEncoding sizeInBits="16" encoding="unsigned" />
+      </EnumeratedDataType>
 
       <ContainerDataType name="DestFileEntry" shortDescription="Get Destination table entry" >
         <EntryList>
-          <Entry name="Movename" type="BASE_TYPES/PathName" shortDescription="Move files to this dir after close" />
-          <Entry name="Pathname" type="BASE_TYPES/PathName" shortDescription="Path portion of filename" />
-          <Entry name="Basename" type="BASE_TYPES/PathName" shortDescription="Description such as 'HK Telemetry File'" />
-          <Entry name="Extension" type="ExtensionSize" shortDescription="Extension portion of filename" />
-          <Entry name="FileNameType" type="BASE_TYPES/uint16" shortDescription="File enable/disable state" />
-          <Entry name="EnableState" type="BASE_TYPES/uint16" shortDescription="Max file size (bytes)" />
-          <Entry name="MaxFileSize" type="BASE_TYPES/uint32" shortDescription="File enable/disable state " />
+          <Entry name="Movename" type="PathnameString" shortDescription="Move files to this dir after close" />
+          <Entry name="Pathname" type="PathnameString" shortDescription="Path portion of filename" />
+          <Entry name="Basename" type="BasenameString" shortDescription="Description such as 'HK Telemetry File'" />
+          <Entry name="Extension" type="ExtensionString" shortDescription="Extension portion of filename" />
+          <Entry name="FileNameType" type="BASE_TYPES/uint16" shortDescription="Type of file name" />
+          <Entry name="EnableState" type="EnableState" shortDescription="File enable/disable state "/>
+          <Entry name="MaxFileSize" type="BASE_TYPES/uint32" shortDescription="Max file size (bytes)" />
           <Entry name="MaxFileAge" type="BASE_TYPES/uint32" shortDescription="Max file age (seconds)" />
           <Entry name="SequenceCount" type="BASE_TYPES/uint32" shortDescription="Sequence count portion of filename" />
         </EntryList>
@@ -106,27 +98,40 @@
         </DimensionList>
       </ArrayDataType>
 
-      <IntegerDataType name="DescriptorSize">
-        <IntegerDataEncoding sizeInBits="4" encoding="unsigned" />
-      </IntegerDataType>
-
-      <ArrayDataType name="DestinationFilterDescriptor" dataTypeRef="DescriptorSize">
-        <DimensionList>
-          <Dimension size="${DS/DESCRIPTOR_BUFSIZE}" />
-        </DimensionList>
-      </ArrayDataType>
-
-      <ContainerDataType name="DestFileTable" shortDescription="Get Free Space table entry" >
+      <ContainerDataType name="DestFileTable" shortDescription="" >
         <EntryList>
-          <Entry name="Descriptor" type="DestinationFilterDescriptor" shortDescription="Description such as 'HK Telemetry File'" />
+          <Entry name="Descriptor" type="DescriptorString" shortDescription="Description such as 'HK Telemetry File'" />
           <Entry name="File" type="DestinationFile" shortDescription="Number of data bytes to copy from input to output pkt" />
         </EntryList>
       </ContainerDataType>
 
+      <ContainerDataType name="FileTblFile_Payload" shortDescription="BC: File table proxy telemetry payload">
+        <EntryList>
+          <Entry name="FileHdr" type="CFE_FS/Header"    shortDescription="cFE standard file header" />
+          <Entry name="TblHdr"  type="CFE_TBL/File_Hdr" shortDescription="cFE standard table header" />
+          <Entry name="TblData" type="DestFileTable"    shortDescription="" />
+        </EntryList>
+      </ContainerDataType>
+      
+      <ContainerDataType name="FileTblFileTlm" baseType="CFE_HDR/TelemetryHeader" shortDescription="BC: File table proxy telemetry message">
+        <EntryList>
+          <Entry type="FileTblFile_Payload" name="Payload" shortDescription=""/>
+        </EntryList>
+      </ContainerDataType>      
+
+      <EnumeratedDataType name="FilterType" shortDescription="Filter type (packet count or time)">
+        <EnumerationList>
+          <Enumeration label="INVALID" value="0" />
+          <Enumeration label="BY_COUNT" value="1" shortDescription="Action is based on packet sequence count" />
+          <Enumeration label="BY_TIME" value="2" shortDescription="Action is based on packet timestamp" />
+        </EnumerationList>
+        <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+      </EnumeratedDataType>
+
       <ContainerDataType name="FilterParms" shortDescription="DS Packet Filter Parameters" >
         <EntryList>
           <Entry name="FileTableIndex" type="BASE_TYPES/uint8" shortDescription="Index into Destination File Table" />
-          <Entry name="FilterType" type="BASE_TYPES/uint8" shortDescription="Filter type (packet count or time)" />
+          <Entry name="FilterType" type="FilterType" shortDescription="Filter type (packet count or time)" />
           <Entry name="Algorithm_N" type="BASE_TYPES/uint16" shortDescription="Algorithm value N (pass this many)" />
           <Entry name="Algorithm_X" type="BASE_TYPES/uint16" shortDescription="Algorithm value X (out of this many)" />
           <Entry name="Algorithm_O" type="BASE_TYPES/uint16" shortDescription="Algorithm value O (at this offset)" />
@@ -154,19 +159,32 @@
 
       <ContainerDataType name="FilterTable" shortDescription="DS Filter Table" >
         <EntryList>
-          <Entry name="Descriptor" type="DestinationFilterDescriptor" shortDescription="Description such as 'HK Telemetry File'" />
+          <Entry name="Descriptor" type="DescriptorString" shortDescription="Description such as 'HK Telemetry File'" />
           <Entry name="Packet" type="FilterPacket" shortDescription="Number of data bytes to copy from input to output pkt" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="AppStateCmd_Payload" shortDescription="Set Ena/Dis State For DS Application">
+      <ContainerDataType name="FilterTblFile_Payload" shortDescription="BC: Filter table proxy telemetry payload">
         <EntryList>
-          <Entry name="EnableState" type="BASE_TYPES/uint16" shortDescription="Application enable/disable state" />
-          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Padding on 32-bit boundaries" />
+          <Entry name="FileHdr" type="CFE_FS/Header"    shortDescription="cFE standard file header" />
+          <Entry name="TblHdr"  type="CFE_TBL/File_Hdr" shortDescription="cFE standard table header" />
+          <Entry name="TblData" type="FilterTable"      shortDescription="" />
+        </EntryList>
+      </ContainerDataType>
+      
+      <ContainerDataType name="FilterTblFileTlm" baseType="CFE_HDR/TelemetryHeader" shortDescription="BC: Filter table proxy telemetry message">
+        <EntryList>
+          <Entry type="FilterTblFile_Payload" name="Payload" shortDescription=""/>
+        </EntryList>
+      </ContainerDataType>      
+
+      <ContainerDataType name="AppState_Payload" shortDescription="Set Ena/Dis State For DS Application">
+        <EntryList>
+          <Entry name="EnableState" type="EnableState" shortDescription="Application enable/disable state" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="FilterFileCmd_Payload" shortDescription="Set File Selection For Packet Filter Table Entry">
+      <ContainerDataType name="FilterFile_Payload" shortDescription="Set File Selection For Packet Filter Table Entry">
         <EntryList>
           <Entry name="MessageID" type="CFE_SB/MsgId" shortDescription="Message ID of existing entry in Packet Filter Table" />
           <Entry name="FilterParmsIndex" type="BASE_TYPES/uint16" shortDescription="Index into Filter Parms Array" />
@@ -174,7 +192,7 @@
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="FilterTypeCmd_Payload" shortDescription="Set Filter Type For Packet Filter Table Entry">
+      <ContainerDataType name="FilterType_Payload" shortDescription="Set Filter Type For Packet Filter Table Entry">
         <EntryList>
           <Entry name="MessageID" type="CFE_SB/MsgId" shortDescription="Message ID of existing entry in Packet Filter Table" />
           <Entry name="FilterParmsIndex" type="BASE_TYPES/uint16" shortDescription="Index into Filter Parms Array" />
@@ -182,7 +200,7 @@
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="FilterParmsCmd_Payload" shortDescription="Set Filter Parameters For Packet Filter Table Entry">
+      <ContainerDataType name="FilterParms_Payload" shortDescription="Set Filter Parameters For Packet Filter Table Entry">
         <EntryList>
           <Entry name="MessageID" type="CFE_SB/MsgId" shortDescription="Message ID of existing entry in Packet Filter Table" />
           <Entry name="FilterParmsIndex" type="BASE_TYPES/uint16" shortDescription="Index into Filter Parms Array" />
@@ -192,76 +210,69 @@
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestTypeCmd_Payload" shortDescription="Set Filename Type For Destination File Table Entry">
+      <ContainerDataType name="DestType_Payload" shortDescription="Set Filename Type For Destination File Table Entry">
         <EntryList>
           <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
           <Entry name="FileNameType" type="BASE_TYPES/uint16" shortDescription="Filename type - count vs time" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestStateCmd_Payload" shortDescription="Set Ena/Dis State For Destination File Table Entry">
+      <ContainerDataType name="DestState_Payload" shortDescription="Set Ena/Dis State For Destination File Table Entry">
         <EntryList>
           <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
-          <Entry name="EnableState" type="BASE_TYPES/uint16" shortDescription="File enable/disable state" />
+          <Entry name="EnableState" type="EnableState" shortDescription="File enable/disable state" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestPathCmd_Payload" shortDescription="Set Path Portion Of Filename For Destination File Table Entry">
+      <ContainerDataType name="DestPath_Payload" shortDescription="Set Path Portion Of Filename For Destination File Table Entry">
         <EntryList>
           <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
-          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
-          <Entry name="Pathname" type="BASE_TYPES/PathName" shortDescription="Path portion of filename" />
+          <Entry name="Pathname" type="PathnameString" shortDescription="Path portion of filename" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestBaseCmd_Payload" shortDescription="Set Path Portion Of Filename For Destination File Table Entry">
+      <ContainerDataType name="DestBase_Payload" shortDescription="Set Base Portion Of Filename For Destination File Table Entry">
         <EntryList>
           <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
-          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
-          <Entry name="Pathname" type="BASE_TYPES/PathName" shortDescription="Path portion of filename" />
+          <Entry name="Basename" type="BasenameString" shortDescription="Base portion of filename" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestExtCmd_Payload" shortDescription="Set Extension Portion Of Filename For Destination File Table Entry">
+      <ContainerDataType name="DestExt_Payload" shortDescription="Set Extension Portion Of Filename For Destination File Table Entry">
         <EntryList>
           <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
-          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
-          <Entry name="Extension" type="BASE_TYPES/PathName" shortDescription="Path portion of filename" />
+          <Entry name="Extension" type="ExtensionString" shortDescription="Path portion of filename" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestSizeCmd_Payload" shortDescription="Set Max File Size For Destination File Table Entry">
+      <ContainerDataType name="DestSize_Payload" shortDescription="Set Max File Size For Destination File Table Entry">
         <EntryList>
           <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
-          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
+          <PaddingEntry sizeInBits="16" shortDescription="Structure Padding on 32-bit boundaries" />
           <Entry name="MaxFileSize" type="BASE_TYPES/uint32" shortDescription="Max file size (bytes) before re-open" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestAgeCmd_Payload" shortDescription="Set Max File Age For Destination File Table Entry">
+      <ContainerDataType name="DestAge_Payload" shortDescription="Set Max File Age For Destination File Table Entry">
         <EntryList>
           <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
-          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
+          <PaddingEntry sizeInBits="16" shortDescription="Structure Padding on 32-bit boundaries" />
           <Entry name="MaxFileAge" type="BASE_TYPES/uint32" shortDescription="Max file age (seconds)" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestCountCmd_Payload" shortDescription="Set Sequence Portion Of Filename For Destination File Table Entry">
+      <ContainerDataType name="DestCount_Payload" shortDescription="Set Sequence Portion Of Filename For Destination File Table Entry">
         <EntryList>
           <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
-          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
+          <PaddingEntry sizeInBits="16" shortDescription="Structure Padding on 32-bit boundaries" />
           <Entry name="SequenceCount" type="BASE_TYPES/uint32" shortDescription="Sequence count portion of filename" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="CloseFileCmd_Payload" shortDescription="Close Destination File">
+      <ContainerDataType name="CloseFile_Payload" shortDescription="Close Destination File">
         <EntryList>
           <Entry name="FileTableIndex" type="BASE_TYPES/uint16" shortDescription="Index into Destination File Table" />
-          <Entry name="Padding" type="BASE_TYPES/uint16" shortDescription="Structure Padding on 32-bit boundaries" />
         </EntryList>
-      </ContainerDataType>
-
-      <ContainerDataType name="CloseAllGetFileInfo_Payload" shortDescription="Close all dest files and get file info commands">
       </ContainerDataType>
 
       <ContainerDataType name="AddRemoveMid_Payload" shortDescription="Add and remove message ID from Packet Filter Table commands">
@@ -270,7 +281,36 @@
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="HousekeepingCmd" baseType="CFE_HDR/CommandHeader" shortDescription="Send Housekeeping command" />
+      <ContainerDataType name="FileInfo" shortDescription="Current state of destination files">
+        <EntryList>
+          <Entry type="BASE_TYPES/uint32" name="FileAge" shortDescription="Current file age in seconds" />
+          <Entry type="BASE_TYPES/uint32" name="FileSize" shortDescription="Current file size in bytes" />
+          <Entry type="BASE_TYPES/uint32" name="FileRate" shortDescription="Current file data rate (avg since HK)" />
+          <Entry type="BASE_TYPES/uint32" name="SequenceCount" shortDescription="Sequence count portion of filename" />
+          <Entry type="EnableState" name="EnableState" shortDescription="Current file enable/disable state" />
+          <Entry type="BASE_TYPES/uint16" name="OpenState" shortDescription="Current file open/close state" />
+          <Entry type="FullNameString"    name="FileName" shortDescription="Current filename (path+base+seq+ext)" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ArrayDataType name="FileInfoSet" dataTypeRef="FileInfo">
+        <DimensionList>
+          <Dimension size="${DS/DEST_FILE_CNT}" />
+        </DimensionList>
+      </ArrayDataType>
+
+      <ContainerDataType name="FileInfoPkt" baseType="CFE_HDR/TelemetryHeader" shortDescription="Application file info packet">
+        <EntryList>
+          <Entry type="FileInfoSet" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+      <ContainerDataType name="FileCompletePkt" baseType="CFE_HDR/TelemetryHeader" shortDescription="Single application file info packet">
+        <EntryList>
+          <Entry type="FileInfo" name="Payload" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SendHkCmd" baseType="CFE_HDR/CommandHeader" shortDescription="Send Housekeeping command" />
 
       <ContainerDataType name="NoopCmd" baseType="CMD">
         <LongDescription>
@@ -305,7 +345,7 @@
         </ConstraintSet>
       </ContainerDataType>
 
-      <ContainerDataType name="ResetCtrsCmd" baseType="CMD">
+      <ContainerDataType name="ResetCountersCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Reset Housekeeping Telemetry Counters Command
 
@@ -336,7 +376,7 @@
         </ConstraintSet>
       </ContainerDataType>
 
-      <ContainerDataType name="AppStateCmd" baseType="CMD">
+      <ContainerDataType name="SetAppStateCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Set Enable/Disable State For DS Application
 
@@ -345,7 +385,7 @@
               DS application.  No packets are stored while DS is disabled.
 
          \par Command Structure
-              #DS_AppStateCmd_t
+              #DS_SetAppStateCmd_t
 
          \par Command Verification
               Evidence of success may be found in the following telemetry:
@@ -368,11 +408,11 @@
           <ValueConstraint entry="Sec.FunctionCode" value="2" />
         </ConstraintSet>
         <EntryList>
-          <Entry type="AppStateCmd_Payload" name="Payload" />
+          <Entry type="AppState_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="FilterFileCmd" baseType="CMD">
+      <ContainerDataType name="SetFilterFileCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Set Destination File For Packet Filter Table Entry
 
@@ -381,7 +421,7 @@
               indicated entry in the Packet Filter Table.
 
          \par Command Structure
-              #DS_FilterFileCmd_t
+              #DS_SetFilterFileCmd_t
 
          \par Command Verification
               Evidence of success may be found in the following telemetry:
@@ -408,11 +448,11 @@
           <ValueConstraint entry="Sec.FunctionCode" value="3" />
         </ConstraintSet>
         <EntryList>
-          <Entry type="FilterFileCmd_Payload" name="Payload" />
+          <Entry type="FilterFile_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="FilterTypeCmd" baseType="CMD">
+      <ContainerDataType name="SetFilterTypeCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Set Filter Type For Packet Filter Table Entry
 
@@ -421,7 +461,7 @@
               indicated entry in the Packet Filter Table.
 
           \par Command Structure
-               #DS_FilterTypeCmd_t
+               #DS_SetFilterTypeCmd_t
 
           \par Command Verification
                Evidence of success may be found in the following telemetry:
@@ -448,11 +488,11 @@
           <ValueConstraint entry="Sec.FunctionCode" value="4" />
         </ConstraintSet>
         <EntryList>
-          <Entry type="FilterTypeCmd_Payload" name="Payload" />
+          <Entry type="FilterType_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="FilterParmsCmd" baseType="CMD">
+      <ContainerDataType name="SetFilterParmsCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Set Algorithm Parameters For Packet Filter Table Entry
 
@@ -461,7 +501,7 @@
               indicated entry in the Packet Filter Table.
 
          \par Command Structure
-              #DS_FilterParmsCmd_t
+              #DS_SetFilterParmsCmd_t
 
          \par Command Verification
               Evidence of success may be found in the following telemetry:
@@ -488,11 +528,11 @@
           <ValueConstraint entry="Sec.FunctionCode" value="5" />
         </ConstraintSet>
         <EntryList>
-          <Entry type="FilterParmsCmd_Payload" name="Payload" />
+          <Entry type="FilterParms_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestTypeCmd" baseType="CMD">
+      <ContainerDataType name="SetDestTypeCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Set Filename Type For Destination File Table Entry
 
@@ -501,7 +541,7 @@
               indicated entry in the Destination File Table.
 
          \par Command Structure
-             #DS_DestTypeCmd_t
+             #DS_SetDestTypeCmd_t
 
          \par Command Verification
               Evidence of success may be found in the following telemetry:
@@ -526,11 +566,11 @@
           <ValueConstraint entry="Sec.FunctionCode" value="6" />
         </ConstraintSet>
         <EntryList>
-          <Entry type="DestTypeCmd_Payload" name="Payload" />
+          <Entry type="DestType_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestStateCmd" baseType="CMD">
+      <ContainerDataType name="SetDestStateCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Set Ena/Dis State For Destination File Table Entry
 
@@ -539,7 +579,7 @@
               indicated entry in the Destination File Table.
 
          \par Command Structure
-              #DS_DestStateCmd_t
+              #DS_SetDestStateCmd_t
 
          \par Command Verification
               Evidence of success may be found in the following telemetry:
@@ -564,11 +604,11 @@
           <ValueConstraint entry="Sec.FunctionCode" value="7" />
         </ConstraintSet>
         <EntryList>
-          <Entry type="DestStateCmd_Payload" name="Payload" />
+          <Entry type="DestState_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestPathCmd" baseType="CMD">
+      <ContainerDataType name="SetDestPathCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Set Pathname For Destination File Table Entry
 
@@ -577,7 +617,7 @@
               for the indicated entry in the Destination File Table.
 
          \par Command Structure
-              #DS_DestPathCmd_t
+              #DS_SetDestPathCmd_t
 
          \par Command Verification
               Evidence of success may be found in the following telemetry:
@@ -602,11 +642,11 @@
           <ValueConstraint entry="Sec.FunctionCode" value="8" />
         </ConstraintSet>
         <EntryList>
-          <Entry type="DestPathCmd_Payload" name="Payload" />
+          <Entry type="DestPath_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestBaseCmd" baseType="CMD">
+      <ContainerDataType name="SetDestBaseCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Set Basename For Destination File Table Entry
 
@@ -615,7 +655,7 @@
               for the indicated entry in the Destination File Table.
 
          \par Command Structure
-              #DS_DestBaseCmd_t
+              #DS_SetDestBaseCmd_t
 
          \par Command Verification
               Evidence of success may be found in the following telemetry:
@@ -640,11 +680,11 @@
           <ValueConstraint entry="Sec.FunctionCode" value="9" />
         </ConstraintSet>
         <EntryList>
-          <Entry type="DestBaseCmd_Payload" name="Payload" />
+          <Entry type="DestBase_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestExtCmd" baseType="CMD">
+      <ContainerDataType name="SetDestExtCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Set Extension For Destination File Table Entry
 
@@ -653,7 +693,7 @@
               for the indicated entry in the Destination File Table.
 
          \par Command Structure
-              #DS_DestExtCmd_t
+              #DS_SetDestExtCmd_t
 
          \par Command Verification
               Evidence of success may be found in the following telemetry:
@@ -678,11 +718,11 @@
           <ValueConstraint entry="Sec.FunctionCode" value="10" />
         </ConstraintSet>
         <EntryList>
-          <Entry type="DestExtCmd_Payload" name="Payload" />
+          <Entry type="DestExt_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestSizeCmd" baseType="CMD">
+      <ContainerDataType name="SetDestSizeCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Set Max File Size For Destination File Table Entry
 
@@ -691,7 +731,7 @@
               indicated entry in the Destination File Table.
 
          \par Command Structure
-              #DS_DestSizeCmd_t
+              #DS_SetDestSizeCmd_t
 
          \par Command Verification
               Evidence of success may be found in the following telemetry:
@@ -716,11 +756,11 @@
           <ValueConstraint entry="Sec.FunctionCode" value="11" />
         </ConstraintSet>
         <EntryList>
-          <Entry type="DestSizeCmd_Payload" name="Payload" />
+          <Entry type="DestSize_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestAgeCmd" baseType="CMD">
+      <ContainerDataType name="SetDestAgeCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Set Max File Age For Destination File Table Entry
 
@@ -729,7 +769,7 @@
               indicated entry in the Destination File Table.
 
          \par Command Structure
-              #DS_DestAgeCmd_t
+              #DS_SetDestAgeCmd_t
 
          \par Command Verification
               Evidence of success may be found in the following telemetry:
@@ -754,11 +794,11 @@
           <ValueConstraint entry="Sec.FunctionCode" value="12" />
         </ConstraintSet>
         <EntryList>
-          <Entry type="DestAgeCmd_Payload" name="Payload" />
+          <Entry type="DestAge_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 
-      <ContainerDataType name="DestCountCmd" baseType="CMD">
+      <ContainerDataType name="SetDestCountCmd" baseType="CMD">
         <LongDescription>
          \fmcmd Set Sequence Count For Destination File Table Entry
 
@@ -767,7 +807,7 @@
               indicated entry in the Destination File Table.
 
          \par Command Structure
-              #DS_DestCountCmd_t
+              #DS_SetDestCountCmd_t
 
          \par Command Verification
               Evidence of success may be found in the following telemetry:
@@ -792,7 +832,7 @@
           <ValueConstraint entry="Sec.FunctionCode" value="13" />
         </ConstraintSet>
         <EntryList>
-          <Entry type="DestCountCmd_Payload" name="Payload" />
+          <Entry type="DestCount_Payload" name="Payload" />
         </EntryList>
       </ContainerDataType>
 
@@ -828,7 +868,7 @@
         <ValueConstraint entry="Sec.FunctionCode" value="14" />
       </ConstraintSet>
       <EntryList>
-        <Entry type="CloseFileCmd_Payload" name="Payload" />
+        <Entry type="CloseFile_Payload" name="Payload" />
       </EntryList>
     </ContainerDataType>
 
@@ -861,9 +901,6 @@
       <ConstraintSet>
         <ValueConstraint entry="Sec.FunctionCode" value="15" />
       </ConstraintSet>
-      <EntryList>
-        <Entry type="CloseAllGetFileInfo_Payload" name="Payload" />
-      </EntryList>
     </ContainerDataType>
 
     <ContainerDataType name="AddMidCmd" baseType="CMD">
@@ -905,44 +942,7 @@
       </EntryList>
     </ContainerDataType>
 
-    <ContainerDataType name="CloseAllCmd" baseType="CMD">
-      <LongDescription>
-       \fmcmd Close All Destination Files
-
-       \par Description
-            This command will close all open Destination Files.
-            - NOTE: Using this command may incur a performance hit based upon
-                    the number and size of the files being closed.
-
-       \par Command Structure
-            #DS_CloseAllCmd_t
-
-       \par Command Verification
-            Evidence of success may be found in the following telemetry:
-            - #DS_HkPacket_t.CmdAcceptedCounter will increment
-            - The #DS_CLOSE_ALL_CMD_EID debug event message will be sent
-
-       \par Error Conditions
-            This command can fail for the following reasons:
-            - Invalid command packet length
-            - Destination file table is not currently loaded
-
-            Evidence of failure may be found in the following telemetry:
-            - #DS_HkPacket_t.CmdRejectedCounter will increment
-            - The #DS_CLOSE_ALL_CMD_ERR_EID error event message will be sent
-
-       \par Criticality
-            None
-      </LongDescription>
-      <ConstraintSet>
-        <ValueConstraint entry="Sec.FunctionCode" value="17" />
-      </ConstraintSet>
-      <EntryList>
-        <Entry type="CloseAllGetFileInfo_Payload" name="Payload" />
-      </EntryList>
-    </ContainerDataType>
-
-    <ContainerDataType name="RemoveMid" baseType="CMD">
+    <ContainerDataType name="RemoveMidCmd" baseType="CMD">
       <LongDescription>
        \fmcmd Remove Message ID from Packet Filter Table
 
@@ -973,7 +973,7 @@
             None
       </LongDescription>
       <ConstraintSet>
-        <ValueConstraint entry="Sec.FunctionCode" value="18" />
+        <ValueConstraint entry="Sec.FunctionCode" value="17" />
       </ConstraintSet>
       <EntryList>
         <Entry type="AddRemoveMid_Payload" name="Payload" />
@@ -981,9 +981,55 @@
     </ContainerDataType>
     </DataTypeSet>
 
+    <ContainerDataType name="CloseAllCmd" baseType="CMD">
+      <LongDescription>
+       \fmcmd Close All Destination Files
+
+       \par Description
+            This command will close all open Destination Files.
+            - NOTE: Using this command may incur a performance hit based upon
+                    the number and size of the files being closed.
+
+       \par Command Structure
+            #DS_CloseAllCmd_t
+
+       \par Command Verification
+            Evidence of success may be found in the following telemetry:
+            - #DS_HkPacket_t.CmdAcceptedCounter will increment
+            - The #DS_CLOSE_ALL_CMD_EID debug event message will be sent
+
+       \par Error Conditions
+            This command can fail for the following reasons:
+            - Invalid command packet length
+            - Destination file table is not currently loaded
+
+            Evidence of failure may be found in the following telemetry:
+            - #DS_HkPacket_t.CmdRejectedCounter will increment
+            - The #DS_CLOSE_ALL_CMD_ERR_EID error event message will be sent
+
+       \par Criticality
+            None
+      </LongDescription>
+      <ConstraintSet>
+        <ValueConstraint entry="Sec.FunctionCode" value="18" />
+      </ConstraintSet>
+    </ContainerDataType>
+
     <ComponentSet>
       <Component name="Application">
         <RequiredInterfaceSet>
+
+          <Interface name="FILE_TBL" shortDescription="File Table" type="CFE_TBL/Table">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TableDataType" type="DestFileTable" />
+            </GenericTypeMapSet>
+          </Interface>
+          <Interface name="FILTER_TBL" shortDescription="Filter Table" type="CFE_TBL/Table">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TableDataType" type="FilterTable" />
+            </GenericTypeMapSet>
+          </Interface>
+
           <Interface name="CMD" shortDescription="DS Ground Commands Message ID" type="CFE_SB/Telecommand">
             <GenericTypeMapSet>
               <GenericTypeMap name="TelecommandDataType" type="CMD" />
@@ -992,40 +1038,54 @@
           <Interface name="SEND_HK" shortDescription="DS Send Hk Data Cmd Message ID" type="CFE_SB/Telecommand">
             <!-- This uses a bare spacepacket with no payload -->
             <GenericTypeMapSet>
-              <GenericTypeMap name="TelecommandDataType" type="HousekeepingCmd" />
+              <GenericTypeMap name="TelecommandDataType" type="SendHkCmd" />
             </GenericTypeMapSet>
           </Interface>
           <Interface name="HK_TLM" shortDescription="DS Hk Telemetry Message ID" type="CFE_SB/Telemetry">
             <GenericTypeMapSet>
-              <GenericTypeMap name="TelemetryDataType" type="HousekeepingPkt" />
+              <GenericTypeMap name="TelemetryDataType" type="HkPacket" />
             </GenericTypeMapSet>
           </Interface>
-          <Interface name="FILE_INFO_TLM" shortDescription="DS File Info Telemetry Message ID" type="CFE_SB/Telemetry">
+          <Interface name="DIAG_TLM" shortDescription="DS File Info Telemetry Message ID" type="CFE_SB/Telemetry">
             <GenericTypeMapSet>
               <GenericTypeMap name="TelemetryDataType" type="FileInfoPkt" />
             </GenericTypeMapSet>
           </Interface>
-          <Interface name="FILE_COMP_TLM" shortDescription="DS Completed File Info Telemetry Message ID" type="CFE_SB/Telemetry">
+          <Interface name="COMP_TLM" shortDescription="DS Completed File Info Telemetry Message ID" type="CFE_SB/Telemetry">
             <GenericTypeMapSet>
-              <GenericTypeMap name="TelemetryDataType" type="FileCompPkt" />
+              <GenericTypeMap name="TelemetryDataType" type="FileCompletePkt" />
             </GenericTypeMapSet>
           </Interface>
+          <Interface name="FILE_TBL_PROXY_TLM" shortDescription="BC: File table proxy telemetry" type="CFE_SB/Telemetry">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelemetryDataType" type="FileTblFileTlm" />
+            </GenericTypeMapSet>
+          </Interface>          
+          <Interface name="FILTER_TBL_PROXY_TLM" shortDescription="BC: Filter table proxy telemetry" type="CFE_SB/Telemetry">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TelemetryDataType" type="FilterTblFileTlm" />
+            </GenericTypeMapSet>
+          </Interface>          
         </RequiredInterfaceSet>
         <Implementation>
           <VariableSet>
             <Variable type="BASE_TYPES/uint16" readOnly="true" name="CmdTopicId" initialValue="${CFE_MISSION/DS_CMD_TOPICID}" />
             <Variable type="BASE_TYPES/uint16" readOnly="true" name="SendHkTopicId" initialValue="${CFE_MISSION/DS_SEND_HK_TOPICID}" />
             <Variable type="BASE_TYPES/uint16" readOnly="true" name="HkTlmTopicId" initialValue="${CFE_MISSION/DS_HK_TLM_TOPICID}" />
-            <Variable type="BASE_TYPES/uint16" readOnly="true" name="FileInfoTlmTopicId" initialValue="${CFE_MISSION/DS_FILE_INFO_TLM_TOPICID}" />
-            <Variable type="BASE_TYPES/uint16" readOnly="true" name="FileCompTlmTopicId" initialValue="${CFE_MISSION/DS_FILE_COMP_TLM_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="DiagTlmTopicId" initialValue="${CFE_MISSION/DS_DIAG_TLM_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="CompTlmTopicId" initialValue="${CFE_MISSION/DS_COMP_TLM_TOPICID}" />
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="FileTblProxyTlmTopicId"   initialValue="${CFE_MISSION/DS_FILE_TBL_PROXY_TLM_TOPICID}"   shortDescription="BC: Proxy table telemetry"/>
+            <Variable type="BASE_TYPES/uint16" readOnly="true" name="FilterTblProxyTlmTopicId" initialValue="${CFE_MISSION/DS_FILTER_TBL_PROXY_TLM_TOPICID}" shortDescription="BC: Proxy table telemetry"/>
           </VariableSet>
           <!-- Assign fixed numbers to the "TopicId" parameter of each interface -->
           <ParameterMapSet>
             <ParameterMap interface="CMD" parameter="TopicId" variableRef="CmdTopicId" />
             <ParameterMap interface="SEND_HK" parameter="TopicId" variableRef="SendHkTopicId" />
             <ParameterMap interface="HK_TLM" parameter="TopicId" variableRef="HkTlmTopicId" />
-            <ParameterMap interface="FILE_INFO_TLM" parameter="TopicId" variableRef="FileInfoTlmTopicId" />
-            <ParameterMap interface="FILE_COMP_TLM" parameter="TopicId" variableRef="FileCompTlmTopicId" />
+            <ParameterMap interface="DIAG_TLM" parameter="TopicId" variableRef="DiagTlmTopicId" />
+            <ParameterMap interface="COMP_TLM" parameter="TopicId" variableRef="CompTlmTopicId" />
+            <ParameterMap interface="FILE_TBL_PROXY_TLM"   parameter="TopicId" variableRef="FileTblProxyTlmTopicId"   shortDescription="BC: Proxy table telemetry"/>
+            <ParameterMap interface="FILTER_TBL_PROXY_TLM" parameter="TopicId" variableRef="FilterTblProxyTlmTopicId" shortDescription="BC: Proxy table telemetry"/>            
           </ParameterMapSet>
         </Implementation>
       </Component>
