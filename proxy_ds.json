@@ -17,8 +17,8 @@
       "url": "https://github.com/nasa/ds",
       "release-tag": "v7.0.1",
       "update-files": [
-         "ds.json           >> ds.json",
-         "eds/ds.xml        >> eds/ds.xml"
+         "ds.json    >> ds.json",
+         "eds/ds.xml >> eds/ds.xml"
       ]
    },
       
@@ -28,8 +28,7 @@
    
    "requires": [],
 
-   "support-files":
-   { 
+   "support-files": { 
       "cmd-sender":  "ds_event_exercise_cmds.txt",
       "file-server": "",
       "scripts":     "",
@@ -37,6 +36,5 @@
       "tutorials":   ""
    }
 
-   
 }}
 
