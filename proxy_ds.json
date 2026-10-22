@@ -2,7 +2,7 @@
    
    "title": "Data Storage App",
    "version": "4.0",
-   "bc-app-spec": "bc-app-spec-v3.1",
+   "bc-app-spec": "bc-app-spec-v4.0",
    "supplier": "Open STEMware",
    "copyright": "bitValence",
    "url": "https://github.com/cfs-apps/proxy_ds",
