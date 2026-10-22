@@ -11,27 +11,29 @@ Notes:
     
 Exercises:
   1. Configure & enable file entry zero that logs event messages
+  2. cFE app noop commands are provided to populate the event log file
   
 """
 
 ================================================================================
 Exercise 1. Configure & enable file entry zero that logs event messages
-
+>#
 ># Data Storage commands. FileTableIndex 0 is the event file
-> 'DS', 'DestPathCmd',   {'FileTableIndex': 0, 'Padding': 0, 'Pathname': '/cf'} ## Set the pathname prefixed to the filename
-> 'DS', 'DestStateCmd',  {'FileTableIndex': 0, 'EnableState': 1} ## Enable event file
-> 'DS', 'GetFileInfoCmd',{} ## Open the FILE_INFO_TLM page prior to sendng the command to view the results 
-> 'DS', 'DestStateCmd',  {'FileTableIndex': 0, 'EnableState': 0} ## Disable event file
-> 'DS', 'CloseFileCmd',  {'FileTableIndex': 0, 'Padding': 0}     ## Close the event file
-
-># Noops commands that can be sent to be written to a file
+> 'DS', 'SetDestPathCmd',   {'FileTableIndex': 0, 'Padding': 0, 'Pathname': '/cf'} ## Set the pathname prefixed to the filename
+> 'DS', 'SetDestStateCmd',  {'FileTableIndex': 0, 'EnableState': 1} ## Enable event file
+> 'DS', 'GetFileInfoCmd',{} ## Open the FILE_INFO_TLM page prior to sending the command to view the results 
+> 'DS', 'SetDestStateCmd',  {'FileTableIndex': 0, 'EnableState': 0} ## Disable event file
+> 'DS', 'CloseFileCmd',  {'FileTableIndex': 0, 'Padding': 0}     ## Close the event file and COMP_TLM message sent with file details
+>#
+># Noops commands that will be written to the DS event file
 > 'CFE_ES', 'NoopCmd', {}     ## Event message sent identifying cFE, OSAL and PSP versions, CFE_ES HK_TLM CommandCounter increments 
 > 'CFE_EVS', 'NoopCmd', {}    ## Event message sent identifying cFE version, CFE_EVS HK_TLM CommandCounter increments
 > 'CFE_SB', 'NoopCmd', {}     ## Event message sent identifying cFE version, CFE_SB HK_TLM CommandCounter increments
 > 'CFE_TBL', 'NoopCmd', {}    ## Event message sent identifying cFE version, CFE_TBL HK_TLM CommandCounter increments
 > 'CFE_TIME', 'NoopCmd', {}   ## Event message sent identifying cFE version, CFE_TIME HK_TLM CommandCounter increments
-
-
+>#
+> 'DS', 'NoopCmd', {}           ## Event message sent identifying cFE, OSAL and PSP versions, DS HK_TLM CommandCounter increments
+> 'DS', 'ResetCountersCmd', {}  ## DS HK_TLM command counters set to zero
 
 
 
